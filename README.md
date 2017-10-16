@@ -8,7 +8,7 @@ The presentation is separated in layers, following the [kernel language approach
 
 # Terminology
 
-Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and to which other terms they correspond in other documents. The terms and their relationships are illustrated in the following figure:
+Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and other synonyms that are used in other documents. The terms and their relationships are illustrated in the following figure:
 
 ![Image](./pull-stream.png)
 
