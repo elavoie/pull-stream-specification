@@ -60,7 +60,18 @@ Prefix: Operation
 
 A basic pairwise interaction corresponds to a flow of values from an upstream module to a downstream module (````U=>D````). A transformer interaction corresponds to a flow of values from an upstream module to transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). Since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream.
 
-Event A always happens before event B is noted ````A->B````.
+Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens B may be written:
+
+````A -> ...
+     \-> B````
+     
+or:
+
+````A  -\
+  ... -> B````
+
+
+events on multiple lines is written ````
 
 # (1) Base Protocol
 
@@ -101,14 +112,14 @@ D: ask1(Ans1) -> U: Ans1=value(V1) -> D: ask2(Ans2) -> U: Ans2=done
 
 Concurrent requests on an empty stream:
 ````
-D: ask1(Ans1)  -> U: Ans1=done    -|
-              |-> D: ask2(Ans2) -> U: Ans2=done
+D: ask1(Ans1)  -> U: Ans1=done   -\
+              \-> D: ask2(Ans2) -> U: Ans2=done
 ````
 
 Concurrent requests for a 1-value stream:
 ````
-D: ask1(Ans1)  -> U: Ans1=value(V1)   -|
-              |-> D: ask2(Ans2)     -> U: Ans2=done
+D: ask1(Ans1)  -> U: Ans1=value(V1)  -\
+              \-> D: ask2(Ans2)     -> U: Ans2=done
 ````
 
 ### Transformer Interactions
@@ -121,8 +132,8 @@ D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
 
 Concurrent requests on a non-empty stream:
 ````
-D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -| -> TO: Ans1=value(V1') -|
-             |-> D: ask2(Ans2) -> TI: askT2(AnsT2)    -> U: AnsT1=done          -> TO: Ans2=done
+D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -\ -> TO: Ans1=value(V1') -\
+             \-> D: ask2(Ans2) -> TI: askT2(AnsT2)    ->  U: AnsT1=done          -> TO: Ans2=done
 ````
 
 
