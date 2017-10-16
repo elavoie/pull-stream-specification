@@ -48,7 +48,7 @@ Different pull-stream documents may use different terms to describe the same thi
 # Format for a Sequence of Interaction Events
 
 ````
-Prefix: Operation
+Prefix: Event
 ````
 
 | Prefixes   | Meaning                      |
@@ -62,6 +62,7 @@ A basic pairwise interaction corresponds to a flow of values from an upstream mo
 
 Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens B may be written:
 
+
 ````A -> ...
      \-> B````
      
@@ -69,9 +70,6 @@ or:
 
 ````A  -\
   ... -> B````
-
-
-events on multiple lines is written ````
 
 # (1) Base Protocol
 
