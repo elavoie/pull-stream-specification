@@ -21,7 +21,7 @@ Different pull-stream documents may use different terms to describe the same thi
 | Indication           | Event coming from a module to the module immediately upstream. It expects no answer.                                                    | Read with no callback                        |
 | Lazy Generation      | Generation of values only after an explicit requested.                                                                                  |                                              |
 | Module               | Element of a pipeline, may be a source, a sink, or a transformer.                                                                       |                                              |
-| Partial Stream       | Stream that can be extended by more values in the future. ````value(V1) value(V2) ... value(Vn)````.                                    |                                              |
+| Partial Stream       | Stream that can be extended by more values in the future. Corresponds to the sequence ````value(V1) value(V2) ... value(Vn)````.      |                                              |
 | Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.                                                       |                                              |
 | Primitive Sink       | Elementary sink.                                                                                                                        |                                              |
 | Primitive Source     | Elementary source.                                                                                                                      |                                              |
