@@ -25,7 +25,7 @@ Different pull-stream documents may use different terms to describe the same thi
 
 # Overview
 
-[!Image](./pull-stream.png)
+![Image](./pull-stream.png)
 
 
 # (1) Base Protocol
