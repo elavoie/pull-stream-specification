@@ -14,7 +14,7 @@ Different pull-stream documents may use different terms to describe the same thi
 
 | Term                 | Definition                                                                                       | Synonyms                                     |
 | :------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------- |
-| Answer               | Event from a module that happens after a request and goes to the module immediately downstream.  |                                              |
+| Answer               | Event from a module that happens after a request and goes to the module immediately downstream.  | Callback                                   |
 | Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.                 |                                              |
 | Indication           | Event coming from a module to the module immediately upstream. It expects no answer.             | Read with no callback                      |
 | Lazy Generation      | Generation of values only after an explicit requested.                                           |                                              |
@@ -33,14 +33,14 @@ The base protocol enables values to flow between modules in a pipeline.
 
 ## Possible Events
 
-| Downstream Requests | Meaning                                                          | 
-| :------------------ | :--------------------------------------------------------------- |
-| ask(Ans)            | Requests a value and expects the answer in Ans.                  |
+| Downstream Requests | Meaning                                                          | Callback Implementation  |
+| :------------------ | :--------------------------------------------------------------- | :----------------------- |
+| ask(Ans)            | Requests a value and expects the answer in Ans.                  | ````read(false, ans)```` |
 
-| Upstream Answers    | Meaning                                                          |
-| :------------------ | :--------------------------------------------------------------- |
-| Ans=value(V)        | Provides the value V.                                            |
-| Ans=done            | Indicates that the stream has ended.                             |
+| Upstream Answers    | Meaning                                                          | Callback Implementation  |
+| :------------------ | :--------------------------------------------------------------- | :----------------------- |
+| Ans=value(V)        | Provides the value V.                                            | ````ans(false, v)````    |
+| Ans=done            | Indicates that the stream has ended.                             | ````ans(true)````        |
 
 ## Properties
 
