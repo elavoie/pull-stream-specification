@@ -55,14 +55,16 @@ The base protocol enables values to flow between modules in a pipeline.
 | Upstream Answers    | Meaning                                                          | Callback Implementation  |
 | :------------------ | :--------------------------------------------------------------- | :----------------------- |
 | Ans=value(V)        | Provides the value V.                                            | ````ans(false, v)````    |
-| Ans=done            | Indicates that the stream has ended.                             | ````ans(true)````        |
+| Ans=done            | Indicates that the stream has completed.                         | ````ans(true)````        |
 
 ## Properties
 
+* An answer always happens after a request;
 * Modules downstream and upstream may regulate the flow rate of the pipeline by respectively delaying their requests or answers;
 * Values are generated lazily by the source. The source may therefore be used to represent an infinite stream;
 * A module may make multiple requests before obtaining the first answer;
 * Answers are always provided in the same order as their corresponding requests;
+* Monotonic: either the stream is extended by a value or is complete and stays complete forever.
 
 ## Possible Interactions
 
