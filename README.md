@@ -16,23 +16,40 @@ Different pull-stream documents may use different terms to describe the same thi
 | :------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------- |
 | Answer               | Event from a module that happens after a request and goes to the module immediately downstream.  |                                              |
 | Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.                 |                                              |
-| Indication           | Event coming from a module to the module immediately upstream. It expects no answer.             | Read with no callback                        |
+| Indication           | Event coming from a module to the module immediately upstream. It expects no answer.             | Read with no callback                      |
+| Lazy Generation      | Generation of values only after an explicit requested.                                           |                                              |
 | Module               | Element of a pipeline, may be a source, a sink, or a transformer.                                |                                              |
 | Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.                |                                              |
 | Primitive Sink       | Elementary sink.                                                                                 |                                              |
 | Primitive Source     | Elementary source.                                                                               |                                              |
-| Request              | Event coming from a module to the module immediately upstream. It expects an answer.             | Read                                         |
-| Sink                 | Module that consumes values, may be composed of a sink and zero or more transformer(s).          | Consumer, Reader                             |
-| Source               | Module that produces values, may be composed of a source and zero or more transformer(s).        | Producer, Readable                           |
-| Transformer          | Module that consumes and produces values, may be composed of multiple transformers.              | Through                                      |
+| Request              | Event coming from a module to the module immediately upstream. It expects an answer.             | Read                                       |
+| Sink                 | Module that consumes values, may be composed of a sink and zero or more transformer(s).          | Consumer, Reader                           |
+| Source               | Module that produces values, may be composed of a source and zero or more transformer(s).        | Producer, Readable                         |
+| Transformer          | Module that consumes and produces values, may be composed of multiple transformers.              | Through                                    |
 | Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.               |                                              |
-
-
 # (1) Base Protocol
+
+The base protocol enables values to flow between modules in a pipeline.
+
+## Possible Events
+
+| Downstream Requests | Meaning                                                          | 
+| :------------------ | :--------------------------------------------------------------- |
+| ask                 | Requests a value.                                                |
+
+| Upstream Answers    | Meaning                                                          |
+| :------------------ | :--------------------------------------------------------------- |
+| value               | Provides a value.                                                |
+| done                | Indicates that the stream has ended.                             |
 
 ## Properties
 
-## Interactions
+* Modules downstream and upstream may regulate the flow rate of the pipeline by respectively delaying their requests or answers;
+* Values are generated lazily by the source. The source may therefore be used to represent an infinite stream;
+* A module may make multiple requests before obtaining the first answer;
+* Answers are always provided in the same order as their corresponding requests;
+
+## Possible Interactions
 
 # (2) Abortable Protocol: (1) + Early Aborting
 
@@ -45,4 +62,8 @@ Different pull-stream documents may use different terms to describe the same thi
 ## Properties
 
 ## Interactions
+
+# Callback Implementation
+
+# Dataflow Implementation
 
