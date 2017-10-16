@@ -8,6 +8,22 @@ The presentation is separated in layers, following the [kernel language approach
 
 # Terminology
 
+Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and to which other terms they correspond in other documents.
+
+| Term                 | Definition                                   | Synonyms                                     |
+| :------------------- | :------------------------------------------- | :------------------------------------------- |
+| Request              |                                              | Read                                         |
+| Indication           |                                              | Read with no callback                        |
+| Answer               |                                              |                                              |
+| Source               |                                              | Producer, Readable                           |
+| Primitive Source     |                                              |                                              |
+| Sink                 |                                              | Consumer, Reader                             |
+| Primitive Sink       |                                              |                                              |
+| Transformer          |                                              | Through                                      |
+| Callback             |                                              |                                              |
+| Module               |                                              |                                              |
+
+
 # (1) Base Protocol
 
 ## Properties
