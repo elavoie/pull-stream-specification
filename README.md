@@ -114,7 +114,7 @@ Concurrent requests on an empty stream:
                   \-> D: ask2(Ans2) -> U: Ans2=done
 
 
-Concurrent requests for a 1-value stream:
+Concurrent requests for a non-empty stream:
 
     D: ask1(Ans1)  -> U: Ans1=value(V1)  -\
                   \-> D: ask2(Ans2)     -> U: Ans2=done
