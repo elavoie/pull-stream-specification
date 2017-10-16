@@ -68,7 +68,7 @@ The base protocol enables values to flow between modules in a pipeline.
 * Values are generated lazily by the source. The source may therefore be used to represent an infinite stream;
 * A module may make multiple requests before obtaining the first answer;
 * Answers are always provided in the same order as their corresponding requests;
-* Monotonic: either the stream is extended by a value or is complete and stays complete forever.
+* Monotonic: either the stream is partial, and can be extended by a value, or complete and stays complete forever.
 
 ## Possible Interactions
 
