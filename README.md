@@ -35,7 +35,7 @@ The base protocol enables values to flow between modules in a pipeline.
 
 | Downstream Requests | Meaning                                                          | 
 | :------------------ | :--------------------------------------------------------------- |
-| ask(Ans)            | Requests a value and expect the answer in Ans.                   |
+| ask(Ans)            | Requests a value and expects the answer in Ans.                  |
 
 | Upstream Answers    | Meaning                                                          |
 | :------------------ | :--------------------------------------------------------------- |
