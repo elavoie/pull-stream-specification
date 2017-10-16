@@ -35,12 +35,12 @@ The base protocol enables values to flow between modules in a pipeline.
 
 | Downstream Requests | Meaning                                                          | 
 | :------------------ | :--------------------------------------------------------------- |
-| ask                 | Requests a value.                                                |
+| ask(Ans)            | Requests a value.                                                |
 
 | Upstream Answers    | Meaning                                                          |
 | :------------------ | :--------------------------------------------------------------- |
-| value               | Provides a value.                                                |
-| done                | Indicates that the stream has ended.                             |
+| Ans=value(V)        | Provides the value V.                                            |
+| Ans=done            | Indicates that the stream has ended.                             |
 
 ## Properties
 
