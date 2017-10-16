@@ -8,7 +8,9 @@ The presentation is separated in layers, following the [kernel language approach
 
 # Terminology
 
-Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and to which other terms they correspond in other documents.
+Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and to which other terms they correspond in other documents. The terms and their relationships are illustrated in the following figure:
+
+![Image](./pull-stream.png)
 
 | Term                 | Definition                                                                                       | Synonyms                                     |
 | :------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------- |
@@ -24,10 +26,6 @@ Different pull-stream documents may use different terms to describe the same thi
 | Source               | Module that produces values, may be composed of a source and transformer.                        | Producer, Readable                           |
 | Transformer          | Module that consumes and produces values, may be composed of multiple transformer.               | Through                                      |
 | Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.               |                                              |
-
-# Overview
-
-![Image](./pull-stream.png)
 
 
 # (1) Base Protocol
