@@ -27,6 +27,21 @@ Different pull-stream documents may use different terms to describe the same thi
 | Source               | Module that produces values, may be composed of a source and zero or more transformer(s).        | Producer, Readable                         |
 | Transformer          | Module that consumes and produces values, may be composed of multiple transformers.              | Through                                    |
 | Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.               |                                              |
+
+# Module Composition
+
+| Composition                   | Result                 |
+| :---------------------------- | :--------------------- |
+| Source + Transformer          | Source                 |
+| Transformer + Transformer     | Transformer            |
+| Transformer + Sink            | Sink                   |
+| Source (+ Transformer) + Sink | Pipeline               |
+
+## Properties
+
+* Composition is declarative: users of the modules do not need to care about the pull-stream protocol to compose modules.
+
+
 # (1) Base Protocol
 
 The base protocol enables values to flow between modules in a pipeline.
@@ -62,6 +77,10 @@ The base protocol enables values to flow between modules in a pipeline.
 ## Properties
 
 ## Interactions
+
+# Limitations
+
+1. The protocol does not easily allow parallel processing between the different modules of a pipeline. To do so, the sink needs to make as many concurrent requests as there are modules in the pipeline, it therefore needs to know how many there are. A source-driven pipeline would not require knowledge of the number of downstream modules (but would loose laziness).
 
 # Callback Implementation
 
