@@ -63,13 +63,13 @@ A basic pairwise interaction corresponds to a flow of values from an upstream mo
 Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens B may be written:
 
 
-````A -> ...
-     \-> B````
+    A -> 
+     \-> B
      
 or:
 
-````A  -\
-  ... -> B````
+    A  -\
+      -> B
 
 # (1) Base Protocol
 
@@ -99,40 +99,40 @@ The base protocol enables values to flow between modules in a pipeline.
 
 Request on an empty stream:
 
-````
-D: ask(Ans) -> U: Ans=done
-````
+
+    D: ask(Ans) -> U: Ans=done
+
 
 Sequential requests on a non-empty stream:
-````
-D: ask1(Ans1) -> U: Ans1=value(V1) -> D: ask2(Ans2) -> U: Ans2=done
-````
+
+    D: ask1(Ans1) -> U: Ans1=value(V1) -> D: ask2(Ans2) -> U: Ans2=done
+
 
 Concurrent requests on an empty stream:
-````
-D: ask1(Ans1)  -> U: Ans1=done   -\
-              \-> D: ask2(Ans2) -> U: Ans2=done
-````
+
+    D: ask1(Ans1)  -> U: Ans1=done   -\
+                  \-> D: ask2(Ans2) -> U: Ans2=done
+
 
 Concurrent requests for a 1-value stream:
-````
-D: ask1(Ans1)  -> U: Ans1=value(V1)  -\
-              \-> D: ask2(Ans2)     -> U: Ans2=done
-````
+
+    D: ask1(Ans1)  -> U: Ans1=value(V1)  -\
+                  \-> D: ask2(Ans2)     -> U: Ans2=done
+
 
 ### Transformer Interactions
 
 Request on an empty stream:
 
-````
-D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
-````
+
+    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
+
 
 Concurrent requests on a non-empty stream:
-````
-D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -\ -> TO: Ans1=value(V1') -\
-             \-> D: ask2(Ans2) -> TI: askT2(AnsT2)    ->  U: AnsT1=done          -> TO: Ans2=done
-````
+
+    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -\ -> TO: Ans1=value(V1') -\
+                 \-> D: ask2(Ans2) -> TI: askT2(AnsT2)    ->  U: AnsT1=done          -> TO: Ans2=done
+
 
 
 # (2) Abortable Protocol: (1) + Early Aborting
