@@ -45,6 +45,22 @@ Different pull-stream documents may use different terms to describe the same thi
 
 * Composition is declarative: users of the modules do not need to care about the pull-stream protocol to compose modules.
 
+# Format for a Sequence of Interaction Events
+
+````
+Prefix: Operation
+````
+
+| Prefixes   | Meaning                      |
+| :--------- | :--------------------------- |
+| D: Event   | Downstream event.            |
+| U: Event   | Upstream event.              |
+| TI: Event  | Transformer input event.     |
+| TO: Event  | Transformer output event.    |
+
+A basic pairwise interaction corresponds to a flow of values from an upstream module to a downstream module (````U=>D````). A transformer interaction corresponds to a flow of values from an upstream module to transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). Since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream.
+
+Event A always happens before event B is noted ````A->B````.
 
 # (1) Base Protocol
 
@@ -68,9 +84,47 @@ The base protocol enables values to flow between modules in a pipeline.
 * Values are generated lazily by the source. The source may therefore be used to represent an infinite stream;
 * A module may make multiple requests before obtaining the first answer;
 * Answers are always provided in the same order as their corresponding requests;
-* Monotonic: either the stream is partial, and can be extended by a value, or complete and stays complete forever.
+* Monotonic: either the stream is partial, and can be extended by a value, or complete and stays complete forever. Values cannot be updated after having been produced and new values must not be produced after the `done` event happened.
 
 ## Possible Interactions
+
+Request on an empty stream:
+
+````
+D: ask(Ans) -> U: Ans=done
+````
+
+Sequential requests on a non-empty stream:
+````
+D: ask1(Ans1) -> U: Ans1=value(V1) -> D: ask2(Ans2) -> U: Ans2=done
+````
+
+Concurrent requests on an empty stream:
+````
+D: ask1(Ans1)  -> U: Ans1=done    -|
+              |-> D: ask2(Ans2) -> U: Ans2=done
+````
+
+Concurrent requests for a 1-value stream:
+````
+D: ask1(Ans1)  -> U: Ans1=value(V1)   -|
+              |-> D: ask2(Ans2)     -> U: Ans2=done
+````
+
+### Transformer Interactions
+
+Request on an empty stream:
+
+````
+D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
+````
+
+Concurrent requests on a non-empty stream:
+````
+D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -| -> TO: Ans1=value(V1') -|
+             |-> D: ask2(Ans2) -> TI: askT2(AnsT2)    -> U: AnsT1=done          -> TO: Ans2=done
+````
+
 
 # (2) Abortable Protocol: (1) + Early Aborting
 
