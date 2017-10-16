@@ -10,20 +10,20 @@ The presentation is separated in layers, following the [kernel language approach
 
 Different pull-stream documents may use different terms to describe the same things. We provide here a table of all terms used in this specification and to which other terms they correspond in other documents.
 
-| Term                 | Definition                                                                           | Synonyms                                     |
-| :------------------- | :----------------------------------------------------------------------------------- | :------------------------------------------- |
-| Answer               | Event from a module that happens after a request and goes to the module downstream.  |                                              |
-| Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.     |                                              |
-| Indication           | Event coming from a module to the module immediately upstream. It expects no answer. | Read with no callback                        |
-| Module               | Element of a pipeline, may be a source, sink or transformer.                         |                                              |
-| Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.    |                                              |
-| Primitive Sink       | Elementary sink.                                                                     |                                              |
-| Primitive Source     | Elementary source.                                                                   |                                              |
-| Request              | Event coming from a module to the module immediately upstream. It expects an answer. | Read                                         |
-| Sink                 | Module that consumes values, may be composed of a sink and transformer.              | Consumer, Reader                             |
-| Source               | Module that produces values, may be composed of a source and transformer.            | Producer, Readable                           |
-| Transformer          | Module that consumes and produces values, may be composed of multiple transformer.   | Through                                      |
-| Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.   |                                              |
+| Term                 | Definition                                                                                       | Synonyms                                     |
+| :------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------- |
+| Answer               | Event from a module that happens after a request and goes to the module immediately downstream.  |                                              |
+| Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.                 |                                              |
+| Indication           | Event coming from a module to the module immediately upstream. It expects no answer.             | Read with no callback                        |
+| Module               | Element of a pipeline, may be a source, sink or transformer.                                     |                                              |
+| Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.                |                                              |
+| Primitive Sink       | Elementary sink.                                                                                 |                                              |
+| Primitive Source     | Elementary source.                                                                               |                                              |
+| Request              | Event coming from a module to the module immediately upstream. It expects an answer.             | Read                                         |
+| Sink                 | Module that consumes values, may be composed of a sink and transformer.                          | Consumer, Reader                             |
+| Source               | Module that produces values, may be composed of a source and transformer.                        | Producer, Readable                           |
+| Transformer          | Module that consumes and produces values, may be composed of multiple transformer.               | Through                                      |
+| Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.               |                                              |
 
 # Overview
 
