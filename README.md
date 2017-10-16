@@ -12,25 +12,25 @@ Different pull-stream documents may use different terms to describe the same thi
 
 ![Image](./pull-stream.png)
 
-| Term                 | Definition                                                                                       | Synonyms                                     |
-| :------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------- |
-| Answer               | Event from a module that happens after a request and goes to the module immediately downstream.  | Callback                                     |
-| Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.                 |                                              |
-| Completed Stream     | Stream that cannot be extended. Stays completed forever. Corresponds to the sequence ````value(V1) value(V2) ... value(Vn) done````           |                                              |
-| Failed Stream        | Stream in which an error occurred. Stays failed forever. Corresponds to the sequence ````value(V1) value(V2) ... value(Vn) error(E)````                                        |                                              |
-| Indication           | Event coming from a module to the module immediately upstream. It expects no answer.             | Read with no callback                        |
-| Lazy Generation      | Generation of values only after an explicit requested.                                           |                                              |
-| Module               | Element of a pipeline, may be a source, a sink, or a transformer.                                |                                              |
-| Partial Stream       | Stream that can be extended by more values in the future. ````value(V1) value(V2) ... value(Vn)```` |                                            |
-| Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.                |                                              |
-| Primitive Sink       | Elementary sink.                                                                                 |                                              |
-| Primitive Source     | Elementary source.                                                                               |                                              |
-| Request              | Event coming from a module to the module immediately upstream. It expects an answer.             | Read                                         |
-| Sink                 | Module that consumes values, may be composed of a sink and zero or more transformer(s).          | Consumer, Reader                             |
-| Source               | Module that produces values, may be composed of a source and zero or more transformer(s).        | Producer, Readable                           |
-| Stream               | Series of values produced by a module. May be partial, complete or failed.                       |                                              |
-| Transformer          | Module that consumes and produces values, may be composed of multiple transformers.              | Through                                      |
-| Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.               |                                              |
+| Term                 | Definition                                                                                                                              | Synonyms                                     |
+| :------------------- | :-----------------------------------------------------------------------------------------------                                        | :------------------------------------------- |
+| Answer               | Event from a module that happens after a request and goes to the module immediately downstream.                                         | Callback                                     |
+| Downstream           | The module(s) in a pipeline that come(s) next when following the flow of values.                                                        |                                              |
+| Completed Stream     | Stream that cannot be extended. Stays completed forever. Corresponds to the sequence ````value(V1) value(V2) ... value(Vn) done````     |                                              |
+| Failed Stream        | Stream in which an error occurred. Stays failed forever. Corresponds to the sequence ````value(V1) value(V2) ... value(Vn) error(E)```` |                                              |
+| Indication           | Event coming from a module to the module immediately upstream. It expects no answer.                                                    | Read with no callback                        |
+| Lazy Generation      | Generation of values only after an explicit requested.                                                                                  |                                              |
+| Module               | Element of a pipeline, may be a source, a sink, or a transformer.                                                                       |                                              |
+| Partial Stream       | Stream that can be extended by more values in the future. ````value(V1) value(V2) ... value(Vn)````                                     |                                              |
+| Pipeline             | Composition of a single source, zero or multiple transformers, and a single sink.                                                       |                                              |
+| Primitive Sink       | Elementary sink.                                                                                                                        |                                              |
+| Primitive Source     | Elementary source.                                                                                                                      |                                              |
+| Request              | Event coming from a module to the module immediately upstream. It expects an answer.                                                    | Read                                         |
+| Sink                 | Module that consumes values, may be composed of a sink and zero or more transformer(s).                                                 | Consumer, Reader                             |
+| Source               | Module that produces values, may be composed of a source and zero or more transformer(s).                                               | Producer, Readable                           |
+| Stream               | Series of values produced by a module. May be partial, complete or failed.                                                              |                                              |
+| Transformer          | Module that consumes and produces values, may be composed of multiple transformers.                                                     | Through                                      |
+| Upstream             | The module(s) in a pipeline that come(s) before when following the flow of values.                                                      |                                              |
 
 # Module Composition
 
