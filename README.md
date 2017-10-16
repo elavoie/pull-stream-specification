@@ -63,13 +63,13 @@ A basic pairwise interaction corresponds to a flow of values from an upstream mo
 Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens B may be written:
 
 
-    A -> 
+    A -> ...
      \-> B
      
 or:
 
-    A  -\
-      -> B
+      A  -\
+    ... -> B
 
 # (1) Base Protocol
 
