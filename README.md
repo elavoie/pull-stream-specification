@@ -154,7 +154,7 @@ Concurrent requests on a non-empty stream of size N:
                  \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -\ -> U: AnsT2=value(V2) -> TO: Ans2=value(V2')
                                   ...
                                   \-> D: askN(AnsN) ->   TI: askTN(AnsTN) -\ -> U: AnsTN=done -> TO: AnsN=done
-                                                   \-> D: askN2(AnsN) ->   TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
+                                                   \-> D: askN2(AnsN2) ->   TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
                                                     ...
 
 # (2) Abortable Protocol: (1) + Early Aborting
