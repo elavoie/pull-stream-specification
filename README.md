@@ -165,16 +165,16 @@ Sequential requests on a non-empty stream of size N-1:
 
 # (2) Abortable Protocol: (1) + Early Aborting
 
-New events are in **bold**.
+New events are in *italic*.
 
 | Downstream Requests | Meaning                                                          | Callback Implementation  |
 | :------------------ | :--------------------------------------------------------------- | :----------------------- |
 | ask(Ans)            | Requests a value and expects the answer in Ans.                  | ````read(false, ans)```` |
-| **abort(Ans)**      | Aborts the stream and expects a confirmation Ans=done.           | ````read(true, ans)````  |
+| *abort(Ans)*        | Aborts the stream and expects a confirmation Ans=done.           | ````read(true, ans)````  |
 
 | Downstream Indications | Meaning                                                          | Callback Implementation  |
 | :------------------    | :--------------------------------------------------------------- | :----------------------- |
-| **done()**             | Aborts the stream and do not wait for a confirmation.            | ````read(true)````       |
+| *done()*               | Aborts the stream and do not wait for a confirmation.            | ````read(true)````       |
 
 | Upstream Answers    | Meaning                                                          | Callback Implementation  |
 | :------------------ | :--------------------------------------------------------------- | :----------------------- |
