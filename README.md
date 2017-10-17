@@ -70,6 +70,12 @@ or:
 
       A  -\
     ... -> B
+    
+However, an event B following an event A may also be written on a second line if there is not enough space on the first
+line to write the full sequence. To disambiguate with concurrent lines, we write the second line with a leading arrow ````->```` which therefore refers to the last item of the first line:
+    
+    A -> ...
+    -> B -> ...
 
 # (1) Base Protocol
 
@@ -129,7 +135,8 @@ Request on an empty stream:
     
 Sequential requests on a non-empty stream:
 
-    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -> TO: Ans1=done -> D: ask2(Ans2) -> TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
+    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
+    -> D: ask2(Ans2) -> TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
 
 Concurrent requests on an empty stream:
 
