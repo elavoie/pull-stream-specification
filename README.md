@@ -73,7 +73,7 @@ or:
 
 # (1) Base Protocol
 
-The base protocol enables values to flow between modules in a pipeline.
+The base protocol enables values to flow between modules in a pipeline and completion of the stream by the source when there are no more values.
 
 ## Possible Events
 
