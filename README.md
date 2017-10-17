@@ -130,7 +130,8 @@ Linear requests on a non-empty stream of size N-1:
     D: ask1(Ans1) -> U: Ans1=value(V1)
     -> ...
     -> D: askN(AnsN) -> U: AnsN=done 
-    -> D: askN2(AnsN2) -> U: AnsN2=done -> ...                                                 
+    -> D: askN2(AnsN2) -> U: AnsN2=done 
+    -> ...                                                 
                                                    
 
 
