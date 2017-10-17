@@ -120,7 +120,7 @@ Concurrent requests on an empty stream:
                   \-> D: ask2(Ans2) -> U: Ans2=done
 
 
-Concurrent requests on a non-empty stream:
+Concurrent requests on a non-empty stream of size N:
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
                  \-> D: ask2(Ans2) -> U: Ans2=value(V2)
@@ -148,7 +148,7 @@ Concurrent requests on an empty stream:
                  \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
 
 
-Concurrent requests on a non-empty stream:
+Concurrent requests on a non-empty stream of size N:
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
                  \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -\ -> U: AnsT2=value(V2) -> TO: Ans2=value(V2')
