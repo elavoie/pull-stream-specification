@@ -108,12 +108,6 @@ Request on an empty stream:
 
     D: ask(Ans) -> U: Ans=done
 
-
-Sequential requests on a non-empty stream:
-
-    D: ask1(Ans1) -> U: Ans1=value(V1) -> D: ask2(Ans2) -> U: Ans2=done
-
-
 Concurrent requests on an empty stream:
 
     D: ask1(Ans1)  -> U: Ans1=done
@@ -123,11 +117,21 @@ Concurrent requests on an empty stream:
 Concurrent requests on a non-empty stream of size N-1:
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
-                 \-> D: ask2(Ans2) -> U: Ans2=value(V2)
-                                  ...
-                                  \-> D: askN(AnsN) -> U: AnsN=done
-                                                   \-> D: askN2(AnsN2) -> U: AnsN2=done
-                                                   ...
+                  ...
+                  \-> D: askN(AnsN) -> U: AnsN=done
+                                   \-> D: askN2(AnsN2) -> U: AnsN2=done
+                                   ...
+
+
+The previous concurrent requirements are the minimal synchronization requirements for the protocol to work. They allow some level of concurrency. In practice however, concurrency is restricted by waiting for the answer to a request to be returned before making another request. This amounts to linearizing all the requests. This approach amounts to performing co-routining between two modules, as shown below.
+
+Linear requests on a non-empty stream of size N-1:
+
+    D: ask1(Ans1) -> U: Ans1=value(V1)
+    -> ...
+    -> D: askN(AnsN) -> U: AnsN=done 
+    -> D: askN2(AnsN2) -> U: AnsN2=done -> ...                                                 
+                                                   
 
 
 ### Transformer Interactions
@@ -136,11 +140,6 @@ Request on an empty stream:
 
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
-    
-Sequential requests on a non-empty stream:
-
-    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
-    -> D: ask2(Ans2) -> TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
 
 Concurrent requests on an empty stream:
 
@@ -151,11 +150,17 @@ Concurrent requests on an empty stream:
 Concurrent requests on a non-empty stream of size N-1:
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
-                 \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -\ -> U: AnsT2=value(V2) -> TO: Ans2=value(V2')
-                                  ...
-                                  \-> D: askN(AnsN) ->   TI: askTN(AnsTN) -\ -> U: AnsTN=done -> TO: AnsN=done
-                                                   \-> D: askN2(AnsN2) ->   TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
+                   ...
+                   \-> D: askN(AnsN) ->   TI: askTN(AnsTN) -\ -> U: AnsTN=done -> TO: AnsN=done
+                                    \-> D: askN2(AnsN2) ->   TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
                                                     ...
+Sequential requests on a non-empty stream of size N-1:
+
+    D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
+    -> ...
+    -> D: askN(AnsN) -> TI: askTN(AnsTN) -> U: AnsTN=done -> TO: AnsN=done
+    -> D: askN2(AnsN2) -> TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
+    -> ...
 
 # (2) Abortable Protocol: (1) + Early Aborting
 
