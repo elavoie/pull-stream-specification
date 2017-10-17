@@ -122,11 +122,10 @@ Concurrent requests on an empty stream:
 
 Concurrent requests on a non-empty stream:
 
-    D: ask1(Ans1)  -> U: Ans1=value(V1)
-                  \-> D: ask2(Ans2)     -> U: Ans2=done
-
-
-
+    D: ask1(Ans1) -> U: Ans1=value(V1)
+                 \-> D: ask2(Ans2) -> U: Ans2=value(V2)
+                                  ...
+                                  \-> D: askN(AnsN) -> U: AnsN=done
 
 
 ### Transformer Interactions
@@ -150,8 +149,9 @@ Concurrent requests on an empty stream:
 Concurrent requests on a non-empty stream:
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
-                 \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
-
+                 \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -\ -> U: AnsT2=done -> TO: Ans2=done
+                                  ...
+                                  \-> D: askN(AnsN) ->   TI: askTN(AnsTN) -> U: AnsTN=done -> TO: AnsN=done
 
 
 # (2) Abortable Protocol: (1) + Early Aborting
