@@ -174,7 +174,7 @@ New events are in *italic*.
 
 | Downstream Indications | Meaning                                                          | Callback Implementation  |
 | :------------------    | :--------------------------------------------------------------- | :----------------------- |
-| *done()*               | Aborts the stream and do not wait for a confirmation.            | ````read(true)````       |
+| *done()*               | Aborts the stream and does not wait for a confirmation.          | ````read(true)````       |
 
 | Upstream Answers    | Meaning                                                          | Callback Implementation  |
 | :------------------ | :--------------------------------------------------------------- | :----------------------- |
