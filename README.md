@@ -232,7 +232,16 @@ Concurrent requests on a non-empty stream (R > 1):
                                       | (D: abortR2(AnsR2) -> TI: abortTR2(AnsTR2) -> U: AnsTR2=done -> TO: AnsR2=done) 
                                       |  D: doneR2
                                       ...
+                                      
+Early-abort originating from a transformer (R > 1):
 
+    D: ask1(Ans1) -> TI: askT1(AnsT1)   -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
+                   ...
+                 \-> D: askR(AnsR)   ->   TI: **abortTR(AnsTR)** -\ -> U: AnsTR=done -> TO: AnsR=done
+                                    \-> (D: askR2(AnsR2)       -> TI: askTR2(AnsTR2)   -> U: AnsTR2=done -> TO: AnsR2=done) 
+                                      | (D: abortR2(AnsR2)     -> TI: abortTR2(AnsTR2) -> U: AnsTR2=done -> TO: AnsR2=done) 
+                                      |  D: doneR2
+                                      ...
 
 # (3) Fault-handling Protocol: (1) + (2) + Error Handling
 
