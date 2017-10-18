@@ -99,22 +99,25 @@ The base protocol enables values to flow between modules in a pipeline and compl
 * Values are generated lazily by the source. The source may therefore be used to represent an infinite stream;
 * A module may make multiple requests before obtaining the first answer;
 * Answers are always provided in the same order as their corresponding requests;
-* Monotonic: either the stream is partial, and can be extended by a value, or complete and stays complete forever. Values cannot be updated after having been produced and new values must not be produced after the `done` event happened.
+* Monotonic: either the stream is partial, and can be extended by a value, or complete and stays complete forever. Values cannot be updated after having been produced and new values must not be produced after the `done` event happened;
+* Because of the monotonicity of the closing operation, modules can perform closing operations for clean-up and ressource release the first time a done event has happened.
 
 ## Possible Interactions
 
-Request on an empty stream:
+There is a single parameter to consider for the case analysis, the number of values in the stream (N-1).
+
+Request on an empty stream (N == 1):
 
 
     D: ask(Ans) -> U: Ans=done
 
-Concurrent requests on an empty stream:
+Concurrent requests on an empty stream (N == 1):
 
     D: ask1(Ans1)  -> U: Ans1=done
                   \-> D: ask2(Ans2) -> U: Ans2=done
 
 
-Concurrent requests on a non-empty stream of size N-1:
+Concurrent requests on a non-empty stream (N > 1):
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
                   ...
@@ -125,7 +128,7 @@ Concurrent requests on a non-empty stream of size N-1:
 
 The previous concurrent requirements are the minimal synchronization requirements for the protocol to work. They allow some level of concurrency. In practice however, concurrency is restricted by waiting for the answer to a request to be returned before making another request. This amounts to linearizing all the requests. This approach amounts to performing co-routining between two modules, as shown below.
 
-Linear requests on a non-empty stream of size N-1:
+Linear requests on a non-empty stream (N > 1):
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
     -> ...
@@ -137,25 +140,25 @@ Linear requests on a non-empty stream of size N-1:
 
 ### Transformer Interactions
 
-Request on an empty stream:
+Request on an empty stream (N == 1):
 
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
 
-Concurrent requests on an empty stream:
+Concurrent requests on an empty stream (N == 1):
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -\ -> U: AnsT1=done -> TO: Ans1=done
                  \-> D: ask2(Ans2) ->  TI: askT2(AnsT2) -> U: AnsT2=done -> TO: Ans2=done
 
 
-Concurrent requests on a non-empty stream of size N-1:
+Concurrent requests on a non-empty stream (N > 1):
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
                    ...
                    \-> D: askN(AnsN) ->   TI: askTN(AnsTN) -\ -> U: AnsTN=done -> TO: AnsN=done
                                     \-> D: askN2(AnsN2) ->   TI: askTN2(AnsTN2) -> U: AnsTN2=done -> TO: AnsN2=done
                                                     ...
-Sequential requests on a non-empty stream of size N-1:
+Sequential requests on a non-empty stream (N > 1):
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
     -> ...
@@ -174,7 +177,7 @@ New events are in *italic*.
 
 | Downstream Indications | Meaning                                                          | Callback Implementation  |
 | :------------------    | :--------------------------------------------------------------- | :----------------------- |
-| *done()*               | Aborts the stream and does not wait for a confirmation.          | ````read(true)````       |
+| *done*                 | Aborts the stream and does not wait for a confirmation.          | ````read(true)````       |
 
 | Upstream Answers    | Meaning                                                          | Callback Implementation  |
 | :------------------ | :--------------------------------------------------------------- | :----------------------- |
@@ -183,7 +186,32 @@ New events are in *italic*.
 
 ## Properties
 
+In addition to the properties for (1), the Abortable Protocol introduce this new property:
+
+* The stream may be completed before all values have been produced by any module in the pipeline, i.e. the number of requested values may be less than the total.
+
 ## Interactions
+
+There are two parameters to consider for the case analysis, the number of requested values (R-1) and the number of values in the stream (N-1).
+
+### The number of requested values is greater than the size of the stream (R > N)
+
+The stream completes before the source aborts it, any subsequent abort has no effect.
+
+### The number of requested values is equal to the size of the stream (R <= N) 
+
+R==1 (0 requested values):
+
+    (D: abort(Ans) -> U: Ans=done) | D: done
+
+Concurrent requests (R > 1) on a non-empty stream (N > 1):
+
+    D: ask1(Ans1) -> U: Ans1=value(V1)
+                ...
+                \-> (D: abortR(AnsR) -> U: AnsR=done) | D: doneR
+                                    \-> (D: askR2(AnsR2) -> U: AnsN2=done) | (D: abortR2(AnsR2)} -> U: AnsN2=done) | D: doneR2
+                                        ...
+
 
 # (3) Fault-handling Protocol: (1) + (2) + Error Handling
 
