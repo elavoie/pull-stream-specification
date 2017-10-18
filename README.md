@@ -76,6 +76,8 @@ line to write the full sequence. To disambiguate with concurrent lines, we write
     
     A -> ...
     -> B -> ...
+    
+When the protocol allows many choices of sequence of events, we write ```` Choice1 | Choice2 | ... | ChoiceN````. We use brackets to disambiguate between sequences (ex: ````(A->B) | C````). 
 
 # (1) Base Protocol
 
@@ -209,8 +211,27 @@ Concurrent requests (R > 1) on a non-empty stream (N > 1):
     D: ask1(Ans1) -> U: Ans1=value(V1)
                 ...
                 \-> (D: abortR(AnsR) -> U: AnsR=done) | D: doneR
-                                    \-> (D: askR2(AnsR2) -> U: AnsN2=done) | (D: abortR2(AnsR2)} -> U: AnsN2=done) | D: doneR2
+                                    \-> (D: askR2(AnsR2) -> U: AnsN2=done) 
+                                      | (D: abortR2(AnsR2) -> U: AnsN2=done) 
+                                      |  D: doneR2
                                         ...
+
+
+#### Transformer Interactions:
+
+R==1 (0 requested values):
+
+    D: abort(Ans1) -> TI: abort(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
+
+Concurrent requests on a non-empty stream (R > 1):
+
+    D: ask1(Ans1) -> TI: askT1(AnsT1)   -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
+                   ...
+                 \-> D: abortR(AnsR) ->   TI: askTR(AnsTR)  -\ -> U: AnsTR=done -> TO: AnsR=done
+                                    \-> (D: askR2(AnsR2)   -> TI: askTR2(AnsTR2)   -> U: AnsTR2=done -> TO: AnsR2=done) 
+                                      | (D: abortR2(AnsR2) -> TI: abortTR2(AnsTR2) -> U: AnsTR2=done -> TO: AnsR2=done) 
+                                      |  D: doneR2
+                                      ...
 
 
 # (3) Fault-handling Protocol: (1) + (2) + Error Handling
