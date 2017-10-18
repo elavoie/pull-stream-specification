@@ -79,6 +79,8 @@ line to write the full sequence. To disambiguate with concurrent lines, we write
     
 When the protocol allows many choices of sequence of events, we write ```` Choice1 | Choice2 | ... | ChoiceN````. We use brackets to disambiguate between sequences (ex: ````(A->B) | C````). 
 
+When an event A may or may not happen before event B, we write ````(A ->)? B````.
+
 # (1) Base Protocol
 
 The base protocol enables values to flow between modules in a pipeline and completion of the stream by the source when there are no more values.
@@ -200,7 +202,30 @@ There are two parameters to consider for the case analysis, the number of reques
 
 The stream completes before the source aborts it, any subsequent abort has no effect.
 
-### The number of requested values is equal to the size of the stream (R <= N) 
+
+Concurrent requests (R > N) on a non-empty stream (N > 1):
+
+    D: ask1(Ans1) -> U: Ans1=value(V1)
+                ...
+                \-> (D: askN(AnsN) -> U: AnsN=done) | D: doneN
+                                    ...
+                                    \-> (D: abortR(AnsR) -> U: AnsR=done) 
+                                      |  D: doneR
+                                        ...
+                                        
+#### Transformer Interactions:
+
+Concurrent requests on a non-empty stream (N > 1):
+
+    D: ask1(Ans1) -> TI: askT1(AnsT1)   -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
+                   ...
+                 \-> D: askN(AnsN) ->   TI: askTR(AnsTR)   -\ -> U: AnsTR=done -> TO: AnsR=done
+                                    ...
+                                    \-> (D: abortR(AnsR)   -> TI: abortTR(AnsTR) -> U: AnsTR=done -> TO: AnsR=done) 
+                                      |  D: doneR
+                                      ...
+
+### The number of requested values is equal or less than the size of the stream (R <= N) 
 
 R==1 (0 requested values):
 
@@ -237,7 +262,7 @@ Early-abort originating from a transformer (R > 1):
 
     D: ask1(Ans1) -> TI: askT1(AnsT1)   -\ -> U: AnsT1=value(V1) -> TO: Ans1=value(V1')
                    ...
-                 \-> D: **askR(AnsR)** ->   TI: abortTR(AnsTR)     -\ -> U: AnsTR=done -> TO: AnsR=done
+                \-> (D: **askR(AnsR)** ->)? TI: abortTR(AnsTR)     -\ -> U: AnsTR=done (-> TO: AnsR=done)?
                                       \-> (D: askR2(AnsR2)       -> TI: askTR2(AnsTR2)   -> U: AnsTR2=done -> TO: AnsR2=done) 
                                         | (D: abortR2(AnsR2)     -> TI: abortTR2(AnsTR2) -> U: AnsTR2=done -> TO: AnsR2=done) 
                                         |  D: doneR2
