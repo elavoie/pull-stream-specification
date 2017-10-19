@@ -58,9 +58,9 @@ Prefix: Event
 | TI: Event  | Transformer input event.     |
 | TO: Event  | Transformer output event.    |
 
-A basic pairwise interaction corresponds to a flow of values from an upstream module to a downstream module (````U=>D````). A transformer interaction corresponds to a flow of values from an upstream module to transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). Since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream.
+A basic pairwise interaction corresponds to a flow of values from an upstream module to a downstream module (````U=>D````). A transformer interaction corresponds to a flow of values from an upstream module to a transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). Since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream.
 
-Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens B may be written:
+Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens before B is written:
 
 
     A -> ...
@@ -108,10 +108,11 @@ The base protocol enables values to flow between modules in a pipeline and compl
 
 ## Possible Interactions
 
-There is a single parameter to consider for the case analysis, the number of values in the stream (N-1).
+There is a single parameter to consider for the case analysis: the number of values in the stream (N-1).
+
+### Base Case
 
 Request on an empty stream (N == 1):
-
 
     D: ask(Ans) -> U: Ans=done
 
@@ -120,8 +121,9 @@ Concurrent requests on an empty stream (N == 1):
     D: ask1(Ans1)  -> U: Ans1=done
                   \-> D: ask2(Ans2) -> U: Ans2=done
 
+### Induction Case
 
-Concurrent requests on a non-empty stream (N > 1):
+Concurrent requests on a non-empty stream (N > 1)
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
                   ...
@@ -141,11 +143,9 @@ Linear requests on a non-empty stream (N > 1):
     -> ...                                                 
                                                    
 
-
 ### Transformer Interactions
 
 Request on an empty stream (N == 1):
-
 
     D: ask1(Ans1) -> TI: askT1(AnsT1) -> U: AnsT1=done -> TO: Ans1=done
 
@@ -180,7 +180,7 @@ New events are in *italic*.
 | *abort(Ans)*        | Aborts the stream and expects a confirmation Ans=done.           | ````read(true, ans)````  |
 
 | Downstream Indications | Meaning                                                          | Callback Implementation  |
-| :------------------    | :--------------------------------------------------------------- | :----------------------- |
+| :--------------------- | :--------------------------------------------------------------- | :----------------------- |
 | *done*                 | Aborts the stream and does not wait for a confirmation.          | ````read(true)````       |
 
 | Upstream Answers    | Meaning                                                          | Callback Implementation  |
@@ -192,7 +192,7 @@ New events are in *italic*.
 
 In addition to the properties for (1), the Abortable Protocol introduce this new property:
 
-* The stream may be completed before all values have been produced by any module in the pipeline, i.e. the number of requested values may be less than the total.
+* The stream may be completed before all values have been produced by any module in the pipeline, i.e. the number of requested values may be less than the total number of possible values in the stream.
 
 ## Interactions
 
@@ -200,7 +200,7 @@ There are two parameters to consider for the case analysis, the number of reques
 
 ### The number of requested values is greater than the size of the stream (R > N)
 
-The stream completes before the source aborts it, any subsequent abort has no effect.
+The stream completes before the module downstream aborts it, any subsequent abort has no effect.
 
 
 Concurrent requests (R > N) on a non-empty stream (N > 1):
@@ -270,9 +270,35 @@ Early-abort originating from a transformer (R > 1):
 
 # (3) Fault-handling Protocol: (1) + (2) + Error Handling
 
+New events are in *italic*.
+
+| Downstream Requests | Meaning                                                                | Callback Implementation                 |
+| :------------------ | :--------------------------------------------------------------------- | :------------------------------------- |
+| ask(Ans)            | Requests a value and expects the answer in Ans.                        | ````read(false, ans)````               |
+| abort(Ans)          | Aborts the stream and expects a confirmation Ans=done.                 | ````read(true, ans)````                 |
+| *error(Msg Ans)*    | Fails the stream and expects a confirmation Ans=done or Ans=error(Msg).| ````read(new Error('Msg'), ans)````  |
+
+| Downstream Indications | Meaning                                                          | Callback Implementation        |
+| :--------------------- | :--------------------------------------------------------------- | :----------------------------- |
+| done                   | Aborts the stream and does not wait for a confirmation.          | ````read(true)````             |
+| *error(Msg)*           | Fails the stream and does not wait for a confirmation.           | ````read(new Error('Msg'))```` |
+
+| Upstream Answers    | Meaning                                                          | Callback Implementation       |
+| :------------------ | :--------------------------------------------------------------- | :---------------------------- |
+| Ans=value(V)        | Provides the value V.                                            | ````ans(false, v)````         |
+| Ans=done            | Indicates that the stream has completed.                         | ````ans(true)````             |
+| *Ans=error(Msg)*    | Indicates that the stream has failed.                            | ````ans(new Error('Msg'))```` |
+
+
 ## Properties
 
+Same as for (2) with the additional property:
+
+* A module may explicitly mention the reason for failing the stream. 
+
 ## Interactions
+
+The interactions are the same as for (2), except that the error message should be propagated. Once failed, the answer to a request must be the error that failed the stream.
 
 # Limitations
 
