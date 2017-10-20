@@ -75,11 +75,18 @@ Different pull-stream documents may use different terms to describe the same thi
 
 * Composition is declarative: users of the modules do not need to care about the pull-stream protocol to compose modules.
 
-# Format for a Sequence of Interaction Events
+# Format for Representing the Protocol as a Sequence of Events
 
-````
-Prefix: Event
-````
+The pull-stream protocol may be implemented with different programming techniques in addition to the original callback-based implementation that was proposed by Dominic Tarr. In order to describe the protocol in a way that is independent of a particular programming technique, we describe the possible interactions between different modules as sequence of events. Two implementations with different programming techniques are therefore equivalent if they generate the same sequence of events.
+
+Moreover, a processing pipeline may be composed of many modules that all follow the same protocol. To avoid the complexity of describing the entire processing pipeline, we describe the sequence of events from the point of view of an abstract module in relationship to adjacent ones that are either upstream or downstream.
+
+A basic pairwise interaction describes the interaction between a module and a source or a sink. Values flow from an upstream module to a downstream module (````U=>D````). To describe a transformer module, two pairwise interactions are necessary, one with the module upstream and one with the module downstream. Values therefore flow from an upstream module to a transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). In both cases, since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream. 
+
+The (relative) module that generated an event is specified using a prefix before the event, which may be one of the following: 
+
+    Prefix: Event
+
 
 | Prefixes   | Meaning                      |
 | :--------- | :--------------------------- |
@@ -88,21 +95,33 @@ Prefix: Event
 | TI: Event  | Transformer input event.     |
 | TO: Event  | Transformer output event.    |
 
-A basic pairwise interaction corresponds to a flow of values from an upstream module to a downstream module (````U=>D````). A transformer interaction corresponds to a flow of values from an upstream module to a transformer input then from the same transformer output to a downstream module (````U=>(TI TO)=>D````). Since the requests propagate in the opposite direction as the values (from downstream to upstream), requests will first happen downstream and propagate upstream, then answers will propagate from upstream towards downstream.
+To remove any specific timing assumption from the specification, we only mention the ordering between different events and not how much time was spent or what other internal or external events may have happened in-between. To express that event A always happens before event B, we write ````A->B````. An event A may happen before or after any two other concurrent events B and C that do not have an order between one another. The concurrency therefore introduces a partial order between A, B, and C. To make the sequence of concurrent events easier to read, we write them on multiple lines so that if event E' happens transitively after event E, it will most often (but not strictly) be at its right horizontally. Any sequence of concurrent events, which when written on a single horizontal timeline, that respects the ordering relationship is a valid interaction within the pull-stream protocol. Any sequence that violates some ordering relationship is not.
 
-Event A always happens before event B is noted ````A->B````. Events may be written on different lines to denote all possible concurrent executions. A happens before B is written:
-
-
-    A -> ...
-     \-> B
-     
-or:
-
-      A  -\
-    ... -> B
+To represent ordering relationships between events written on multiple lines such as:
     
-However, an event B following an event A may also be written on a second line if there is not enough space on the first
-line to write the full sequence. To disambiguate with concurrent lines, we write the second line with a leading arrow ````->```` which therefore refers to the last item of the first line:
+    A B
+    C D
+
+We approximate a 'diagonal' ````->```` with the  ASCII characters ````\->```` and ````-\```` for ````A->D```` when it is concurrent with ````A->B````:
+
+    A  -> B
+    C \-> D
+
+    A  -\ -> B
+    C    D
+
+The opposite 'diagonal' ````->```` is written ````/->```` and ````/-```` for ````C->B```` when it is concurrent with ````C->D````:
+
+    A /-> B
+    C  -> D
+
+    A    B
+    C  -/ -> D
+    
+The choice of one or the other depends on which one is actually clearer in the specific context.
+
+Sometimes, an event B following an event A may also be written on a second line if there is not enough space on the first
+line to write the full sequence. To disambiguate with concurrent lines, we write the second line with a leading arrow ````->```` which therefore implicitly refers to the last item of the first line:
     
     A -> ...
     -> B -> ...
