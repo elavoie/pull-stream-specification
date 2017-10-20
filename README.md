@@ -10,11 +10,13 @@ The presentation is separated in layers, following the [kernel language approach
 
 At its heart, the pull-stream design pattern enables the composition of many independent modules to process a lazy stream of values. Let's first introduce some definitions about streams.
 
-Streams are sequences of immutable values that follow one another in time. When describing a stream we separate its different values with the marker ````,````.  We therefore write ````A,B```` to mean that 'A is followed by B' in time. At any point in time a stream can either (1) be extended with another value, or (2) be completed (terminated) and never be extended again. A stream may be completed because there were a finite number of values, because not all values were needed, or because an error happened during processing. 
+Streams are sequences of values that follow one another in time. At any point in time a stream can either (1) be extended with another value, or (2) be completed (terminated) and never be extended again. A stream may be completed because there were a finite number of values, because not all values were needed, or because an error happened during processing. The past values of a stream may never be replaced with different values and the sequence may never be modified to omit some values or add new ones.
 
-A stream may be in one of three states: *partial*, *completed*, or *failed*. Let's illustrate the three cases with examples using non-zero positive numbers.  
+When describing a stream we separate its different values with the marker ````,````.  We therefore write ````A,B```` to mean that 'A is followed by B' in time.
 
-A *partial stream* is a stream that may still be extended with more values and is terminated by the special ````_```` marker. A newly created stream is a partial stream:
+A stream may be in one of three states: *partial*, *completed*, or *failed*. We illustrate the three cases with examples using non-zero positive numbers.  
+
+A *partial stream* is a stream that may still be extended with more values and is terminated by the special ````_```` marker. A newly created stream is a partial stream with no values:
 
     _
 
