@@ -258,7 +258,7 @@ Concurrent requests (R > N) on a non-empty stream (N > 1):
 
     D: ask1(Ans1) -> U: Ans1=value(V1)
                 ...
-                \-> (D: askN(AnsN) -> U: AnsN=done) | D: doneN
+                \-> (D: askN(AnsN) -> U: AnsN=done)
                                     ...
                                     \-> (D: abortR(AnsR) -> U: AnsR=done) 
                                       |  D: doneR
@@ -287,8 +287,8 @@ Concurrent requests (R > 1) on a non-empty stream (N > 1):
     D: ask1(Ans1) -> U: Ans1=value(V1)
                 ...
                 \-> (D: abortR(AnsR) -> U: AnsR=done) | D: doneR
-                                    \-> (D: askR2(AnsR2) -> U: AnsN2=done) 
-                                      | (D: abortR2(AnsR2) -> U: AnsN2=done) 
+                                    \-> (D: askR2(AnsR2) -> U: AnsR2=done) 
+                                      | (D: abortR2(AnsR2) -> U: AnsR2=done) 
                                       |  D: doneR2
                                         ...
 
