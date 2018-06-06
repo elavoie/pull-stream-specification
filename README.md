@@ -1,6 +1,6 @@
 # Specification
 
-**Superseded by https://arxiv.org/abs/1801.06144**
+**Superseded by https://arxiv.org/abs/1801.06144, the rest of the document is left here for historical purposes.**
 
 This document aims to describe all possible interaction patterns between pull-stream modules (the pull-stream protocol). This may serve a module designer to ensure the module behaves correctly in all cases. In turn that will ensure users of pull-stream modules that any combination of them will work correctly in all cases.
 
